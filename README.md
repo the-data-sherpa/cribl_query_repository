@@ -28,15 +28,15 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 ## Getting Started
 
 1. Clone the repository:
-   \`\`\`
+   ```
    git clone https://github.com/your-username/cribl-query-repository.git
    cd cribl-query-repository
-   \`\`\`
+   ```
 
 2. Install dependencies:
-   \`\`\`
+   ```
    npm install
-   \`\`\`
+   ```
 
 3. Set up Supabase:
    a. Go to [Supabase](https://supabase.com/) and create a new account or log in.
@@ -45,7 +45,7 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
    d. In the left sidebar, click on "SQL Editor".
    e. Click on "New query" and paste the following SQL to create the necessary table:
 
-   \`\`\`sql
+   ```sql
    CREATE TABLE public.queries (
      id SERIAL PRIMARY KEY,
      title TEXT NOT NULL,
@@ -65,28 +65,28 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 
    -- Create a policy that allows all operations for now (you can refine this later)
    CREATE POLICY "Allow all operations on queries" ON public.queries FOR ALL USING (true);
-   \`\`\`
+   ```
 
    f. Click "Run" to execute the SQL and create the table.
 
 4. Set up environment variables:
    a. In the Supabase project dashboard, go to "Settings" > "API" in the left sidebar.
    b. Find your project URL and anon public key.
-   c. Create a \`.env.local\` file in the root of your project and add the following:
+   c. Create a `.env.local` file in the root of your project and add the following:
 
-   \`\`\`
+   ```
    NEXT_PUBLIC_SUPABASE_URL=your_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_public_key
-   \`\`\`
+   ```
 
-   Replace \`your_project_url\` and \`your_anon_public_key\` with the values from your Supabase project.
+   Replace `your_project_url` and `your_anon_public_key` with the values from your Supabase project.
 
 5. Run the development server:
-   \`\`\`
+   ```
    npm run dev
-   \`\`\`
+   ```
 
-6. Open \`http://localhost:3000\` in your browser to see the application.
+6. Open `http://localhost:3000` in your browser to see the application.
 
 ## TODO List
 
