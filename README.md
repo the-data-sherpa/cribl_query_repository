@@ -5,44 +5,44 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 ## Current Features
 
 1. **Query Management**
-   - Create new queries with title, description, content, and tags
-   - View individual queries with syntax highlighting
-   - List all queries with pagination
+   - Create new queries with title, description, content, and tags.
+   - View individual queries with syntax highlighting.
+   - List all queries with pagination.
 
 2. **Search Functionality**
-   - Search queries by title
+   - Search queries by title.
 
 3. **Tag System**
-   - Add tags to queries
-   - Filter queries by tags
-   - Display tags for each query
+   - Add tags to queries.
+   - Filter queries by tags.
+   - Display tags for each query.
 
 4. **User Interface**
-   - Responsive dark-themed design
-   - Syntax highlighting for query content
-   - Pagination for query lists
+   - Responsive dark-themed design.
+   - Syntax highlighting for query content.
+   - Pagination for query lists.
 
 5. **Database Integration**
-   - Supabase integration for data storage and retrieval
+   - Supabase integration for data storage and retrieval.
 
 ## Getting Started
 
-1. Clone the repository:
-   ```
+1. **Clone the repository:**
+   ```bash
    git clone https://github.com/your-username/cribl-query-repository.git
    cd cribl-query-repository
    ```
 
-2. Install dependencies:
-   ```
+2. **Install dependencies:**
+   ```bash
    npm install
    ```
 
-3. Set up Supabase:
-   a. Go to [Supabase](https://supabase.com/) and create a new account or log in.
-   b. Create a new project in Supabase.
-   c. Once your project is ready, go to the project dashboard.
-   d. In the left sidebar, click on "SQL Editor".
+3. **Set up Supabase:**
+   a. Go to [Supabase](https://supabase.com/) and create a new account or log in.  
+   b. Create a new project in Supabase.  
+   c. Once your project is ready, go to the project dashboard.  
+   d. In the left sidebar, click on "SQL Editor".  
    e. Click on "New query" and paste the following SQL to create the necessary table:
 
    ```sql
@@ -69,35 +69,35 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 
    f. Click "Run" to execute the SQL and create the table.
 
-4. Set up environment variables:
-   a. In the Supabase project dashboard, go to "Settings" > "API" in the left sidebar.
-   b. Find your project URL and anon public key.
+4. **Set up environment variables:**
+   a. In the Supabase project dashboard, go to "Settings" > "API" in the left sidebar.  
+   b. Find your project URL and anon public key.  
    c. Create a `.env.local` file in the root of your project and add the following:
 
-   ```
+   ```plaintext
    NEXT_PUBLIC_SUPABASE_URL=your_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_public_key
    ```
 
    Replace `your_project_url` and `your_anon_public_key` with the values from your Supabase project.
 
-5. Run the development server:
-   ```
+5. **Run the development server:**
+   ```bash
    npm run dev
    ```
 
-6. Open `http://localhost:3000` in your browser to see the application.
+6. **Open** `http://localhost:3000` in your browser to see the application.
 
 ## TODO List
 
-1. [x] Implement search functionality within query descriptions and content
-2. [x] Add an edit feature for existing queries
-3. [ ] Implement user authentication for personal collections or favorites
-4. [ ] Add a "Copy to Clipboard" button for query content
-5. [ ] Implement a version history feature for queries
-6. [ ] Add a commenting system for queries
-7. [ ] Implement a rating system for queries
-8. [ ] Create an export/import feature for query collections
+1. [x] Implement search functionality within query descriptions and content.
+2. [x] Add an edit feature for existing queries.
+3. [ ] Implement user authentication for personal collections or favorites.
+4. [ ] Add a "Copy to Clipboard" button for query content.
+5. [ ] Implement a version history feature for queries.
+6. [ ] Add a commenting system for queries.
+7. [ ] Implement a rating system for queries.
+8. [ ] Create an export/import feature for query collections.
 
 ## Contributing
 
