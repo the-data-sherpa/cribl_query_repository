@@ -24,7 +24,7 @@ export default async function QueryPage({
         <div>
           <h1 className="text-3xl font-bold">{query.title}</h1>
           <p className="text-sm text-gray-400 mt-1">
-            Created by {query.user?.email} on {new Date(query.created_at).toLocaleString()}
+            Created by {query.user?.email}
           </p>
         </div>
         <div className="flex items-center space-x-4">
@@ -38,8 +38,6 @@ export default async function QueryPage({
       {query.description && <p className="text-gray-400 mb-4">{query.description}</p>}
       {/* Query content with syntax highlighting and copy button */}
       <QueryContent content={query.content} />
-      {/* Query metadata */}
-      <p className="mt-4 text-gray-400">Created at: {new Date(query.created_at).toLocaleString()}</p>
       {/* Query tags */}
       {query.tags && query.tags.length > 0 && (
         <div className="mt-4">

@@ -2,58 +2,47 @@
 
 import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
+import { useRouter } from 'next/navigation'
 
 export default function Navigation() {
   const { user, signOut } = useAuth()
+  const router = useRouter()
+
+  async function handleSignOut() {
+    try {
+      await signOut()
+      router.push('/auth/signin')
+      router.refresh()
+    } catch (error) {
+      console.error('Failed to sign out:', error)
+      // Optionally show an error message to the user
+    }
+  }
 
   return (
-    <nav className="bg-gray-800 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex space-x-8">
-            <Link 
-              href="/" 
-              className="flex items-center px-2 py-2 text-gray-200 hover:text-white"
-            >
-              Cribl Query Repository
-            </Link>
-            {user && (
-              <Link
-                href="/collections"
-                className="flex items-center px-2 py-2 text-gray-200 hover:text-white"
-              >
-                Collections
+    <nav className="bg-gray-800 p-4">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <Link href="/" className="text-white text-xl font-bold">
+          Query Repository
+        </Link>
+        <div className="space-x-4">
+          {user ? (
+            <>
+              <Link href="/collections" className="text-gray-300 hover:text-white">
+                My Collections
               </Link>
-            )}
-          </div>
-          <div className="flex items-center space-x-4">
-            {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-200">{user.email}</span>
-                <button
-                  onClick={() => signOut()}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-800"
-                >
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link
-                  href="/auth/signin"
-                  className="text-gray-200 hover:text-white"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/auth/signup"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-800"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
-          </div>
+              <button
+                onClick={handleSignOut}
+                className="text-gray-300 hover:text-white"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <Link href="/auth/signin" className="text-gray-300 hover:text-white">
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </nav>

@@ -48,13 +48,10 @@ export default async function Home({
                   <p className="text-gray-400 text-sm">
                     Created by {query.user?.email}
                   </p>
-                  <p className="text-gray-400 text-sm">
-                    {new Date(query.created_at).toLocaleDateString()}
-                  </p>
                 </div>
                 {query.tags && query.tags.length > 0 && (
                   <div className="mt-2">
-                    {query.tags.map((tag, index) => (
+                    {query.tags.map((tag: string, index: number) => (
                       <span
                         key={index}
                         className={`inline-block rounded-full px-2 py-1 text-xs mr-2 mb-2 ${

@@ -1,24 +1,59 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/lib/auth-context'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+
+interface ValidationErrors {
+  email?: string
+  password?: string
+}
 
 export default function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errors, setErrors] = useState<ValidationErrors>({})
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { signIn } = useAuth()
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  function validateForm(): boolean {
+    const newErrors: ValidationErrors = {}
+
+    if (!email) newErrors.email = 'Email is required'
+    else if (!email.includes('@')) newErrors.email = 'Invalid email format'
+    
+    if (!password) newErrors.password = 'Password is required'
+    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters'
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    
+    if (!validateForm()) return
+
+    setLoading(true)
+    setError(null)
+
     try {
-      await signIn(email, password)
-      router.push('/') // Redirect to home page after successful sign in
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) throw error
+
+      router.push('/')
+      router.refresh()
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      console.error('Sign in error:', error)
+      setError(error instanceof Error ? error.message : 'Failed to sign in')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -44,6 +79,11 @@ export default function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
               className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white px-3 py-2 focus:border-blue-500 focus:ring-blue-500"
             />
+            {errors.email && (
+              <div className="text-red-500 text-sm mt-1">
+                {errors.email}
+              </div>
+            )}
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-200">
@@ -57,6 +97,11 @@ export default function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white px-3 py-2 focus:border-blue-500 focus:ring-blue-500"
             />
+            {errors.password && (
+              <div className="text-red-500 text-sm mt-1">
+                {errors.password}
+              </div>
+            )}
           </div>
           <button
             type="submit"

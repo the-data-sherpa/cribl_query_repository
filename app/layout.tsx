@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"
 import type React from "react" // Import React
 import { AuthProvider } from '@/lib/auth-context'
 import Navigation from '@/components/Navigation'
+import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,13 +18,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} h-full`}>
         <AuthProvider>
-          <Navigation />
-          <main className="min-h-screen bg-gray-50">
-            {children}
-          </main>
+          <div className="min-h-screen flex flex-col">
+            <Navigation />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
         </AuthProvider>
       </body>
     </html>
