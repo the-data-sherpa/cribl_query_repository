@@ -39,11 +39,11 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
    ```
 
 3. **Set up Supabase:**
-   a. Go to [Supabase](https://supabase.com/) and create a new account or log in.  
-   b. Create a new project in Supabase.  
-   c. Once your project is ready, go to the project dashboard.  
-   d. In the left sidebar, click on "SQL Editor".  
-   e. Click on "New query" and paste the following SQL to create the necessary table:
+   - Go to [Supabase](https://supabase.com/) and create a new account or log in.  
+   - Create a new project in Supabase.  
+   - Once your project is ready, go to the project dashboard.  
+   - In the left sidebar, click on "SQL Editor".  
+   - Click on "New query" and paste the following SQL to create the necessary table:
 
    ```sql
    CREATE TABLE public.queries (
@@ -67,15 +67,15 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
    CREATE POLICY "Allow all operations on queries" ON public.queries FOR ALL USING (true);
    ```
 
-   f. Click "Run" to execute the SQL and create the table.
+   - Click "Run" to execute the SQL and create the table.
 
 4. **Set up environment variables:**
-   a. In the Supabase project dashboard, go to "Settings" > "API" in the left sidebar.  
-   b. Find your project URL and anon public key.  
-   c. Create a `.env.local` file in the root of your project and add the following:
+   - In the Supabase project dashboard, go to "Settings" > "API" in the left sidebar.  
+   - Find your project URL and anon public key.  
+   - Create a `.env.local` file in the root of your project and add the following:
 
    ```plaintext
-   NEXT_PUBLIC_SUPABASE_URL=your_project_url
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_public_key
    ```
 
@@ -93,7 +93,7 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 1. [x] Implement search functionality within query descriptions and content.
 2. [x] Add an edit feature for existing queries.
 3. [ ] Implement user authentication for personal collections or favorites.
-4. [ ] Add a "Copy to Clipboard" button for query content.
+4. [x] Add a "Copy to Clipboard" button for query content.
 5. [ ] Implement a version history feature for queries.
 6. [ ] Add a commenting system for queries.
 7. [ ] Implement a rating system for queries.
