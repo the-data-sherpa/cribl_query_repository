@@ -29,8 +29,8 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/cribl-query-repository.git
-   cd cribl-query-repository
+   git clone git@github.com:the-data-sherpa/cribl_query_repository.git
+   cd cribl_query_repository
    ```
 
 2. **Install dependencies:**
