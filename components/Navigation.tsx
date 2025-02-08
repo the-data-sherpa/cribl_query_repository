@@ -26,7 +26,7 @@ export default function Navigation() {
           Query Repository
         </Link>
         <div className="space-x-4">
-          {user ? (
+          {user && typeof user === 'object' ? (
             <>
               <Link href="/collections" className="text-gray-300 hover:text-white">
                 My Collections
@@ -35,7 +35,7 @@ export default function Navigation() {
                 onClick={handleSignOut}
                 className="text-gray-300 hover:text-white"
               >
-                Sign Out
+                Sign Out {user.email ? `(${user.email})` : ''}
               </button>
             </>
           ) : (

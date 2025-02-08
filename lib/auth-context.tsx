@@ -8,6 +8,8 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   error: Error | null
+  signIn: (email: string, password: string) => Promise<void>
+  signUp: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -15,6 +17,8 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   error: null,
+  signIn: async () => {},
+  signUp: async () => {},
   signOut: async () => {}
 })
 
@@ -49,6 +53,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   /**
+   * Signs up a new user with email and password
+   * @param email User's email
+   * @param password User's password
+   * @throws {Error} If sign up fails
+   */
+  async function signUp(email: string, password: string) {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      })
+      if (error) throw error
+    } catch (err) {
+      console.error('Sign up error:', err)
+      throw err instanceof Error ? err : new Error('Failed to sign up')
+    }
+  }
+
+  /**
+   * Signs in an existing user with email and password
+   * @param email User's email
+   * @param password User's password
+   * @throws {Error} If sign in fails
+   */
+  async function signIn(email: string, password: string) {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      if (error) throw error
+    } catch (err) {
+      console.error('Sign in error:', err)
+      throw err instanceof Error ? err : new Error('Failed to sign in')
+    }
+  }
+
+  /**
    * Signs out the current user
    * @throws {Error} If sign out fails
    */
@@ -63,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, signOut }}>
+    <AuthContext.Provider value={{ user, loading, error, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   )
