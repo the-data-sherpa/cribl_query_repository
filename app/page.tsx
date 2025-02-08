@@ -25,7 +25,6 @@ export default async function Home({
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">Cribl Query Repository</h1>
         <div className="space-y-6">
           <SearchForm initialSearchTerm={searchTerm || ""} />
           <TagFilter allTags={allTags} />

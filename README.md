@@ -8,6 +8,7 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
    - Create new queries with title, description, content, and tags.
    - View individual queries with syntax highlighting.
    - List all queries with pagination.
+   - Copy queries to clipboard with in-code copy button.
 
 2. **Search Functionality**
    - Search queries by title.
@@ -21,9 +22,19 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
    - Responsive dark-themed design.
    - Syntax highlighting for query content.
    - Pagination for query lists.
+   - Dropdown actions menu for query operations.
 
 5. **Database Integration**
    - Supabase integration for data storage and retrieval.
+
+6. **Authentication**
+   - User sign-up and sign-in functionality.
+   - Protected routes and authenticated API calls.
+
+7. **Collections**
+   - Create personal query collections.
+   - Add queries to collections.
+   - View and manage collections.
 
 ## Getting Started
 
@@ -43,9 +54,10 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
    - Create a new project in Supabase.  
    - Once your project is ready, go to the project dashboard.  
    - In the left sidebar, click on "SQL Editor".  
-   - Click on "New query" and paste the following SQL to create the necessary table:
+   - Click on "New query" and paste the following SQL to create the necessary tables:
 
    ```sql
+   -- Create the queries table
    CREATE TABLE public.queries (
      id SERIAL PRIMARY KEY,
      title TEXT NOT NULL,
@@ -56,18 +68,52 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
    );
 
+   -- Create collections table
+   CREATE TABLE collections (
+     id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+     name text NOT NULL,
+     description text,
+     user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+   );
+
+   -- Create collection_queries junction table
+   CREATE TABLE collection_queries (
+     collection_id uuid REFERENCES collections(id) ON DELETE CASCADE NOT NULL,
+     query_id integer REFERENCES queries(id) ON DELETE CASCADE NOT NULL,
+     added_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+     PRIMARY KEY (collection_id, query_id)
+   );
+
+   -- Create favorites table
+   CREATE TABLE favorites (
+     user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+     query_id integer REFERENCES queries(id) ON DELETE CASCADE NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+     PRIMARY KEY (user_id, query_id)
+   );
+
+   -- Create indexes
    CREATE INDEX idx_queries_title ON public.queries USING GIN (to_tsvector('english', title));
    CREATE INDEX idx_queries_content ON public.queries USING GIN (to_tsvector('english', content));
    CREATE INDEX idx_queries_tags ON public.queries USING GIN (tags);
 
    -- Enable Row Level Security
    ALTER TABLE public.queries ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE collections ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE collection_queries ENABLE ROW LEVEL SECURITY;
+   ALTER TABLE favorites ENABLE ROW LEVEL SECURITY;
 
-   -- Create a policy that allows all operations for now (you can refine this later)
-   CREATE POLICY "Allow all operations on queries" ON public.queries FOR ALL USING (true);
+   -- Create RLS policies
+   CREATE POLICY "Enable insert for authenticated users only" ON collections
+     FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+   CREATE POLICY "Enable select for authenticated users" ON collections
+     FOR SELECT USING (auth.uid() = user_id);
+
+   -- Add other necessary policies as needed
    ```
-
-   - Click "Run" to execute the SQL and create the table.
 
 4. **Set up environment variables:**
    - In the Supabase project dashboard, go to "Settings" > "API" in the left sidebar.  
@@ -92,12 +138,14 @@ A web application for storing, searching, and sharing Cribl Stream and Search qu
 
 1. [x] Implement search functionality within query descriptions and content.
 2. [x] Add an edit feature for existing queries.
-3. [ ] Implement user authentication for personal collections or favorites.
+3. [x] Implement basic user authentication and personal collections.
 4. [x] Add a "Copy to Clipboard" button for query content.
 5. [ ] Implement a version history feature for queries.
 6. [ ] Add a commenting system for queries.
 7. [ ] Implement a rating system for queries.
 8. [ ] Create an export/import feature for query collections.
+9. [ ] Add collection sharing functionality.
+10. [ ] Implement query favorites management.
 
 ## Contributing
 

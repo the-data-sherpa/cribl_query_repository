@@ -1,6 +1,8 @@
 import "./globals.css"
 import { Inter } from "next/font/google"
 import type React from "react" // Import React
+import { AuthProvider } from '@/lib/auth-context'
+import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -16,7 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <AuthProvider>
+          <Navigation />
+          <main className="min-h-screen bg-gray-50">
+            {children}
+          </main>
+        </AuthProvider>
+      </body>
     </html>
   )
 }
