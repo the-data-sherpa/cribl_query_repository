@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth-context'
 import { Collection } from '@/lib/types'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import Container from '@/components/Container'
 
 interface Query {
   id: number
@@ -66,74 +67,72 @@ export default function CollectionPage({ params }: { params: Promise<{ id: strin
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <Container>
         <div className="text-center">
           Please sign in to view collections
         </div>
-      </div>
+      </Container>
     )
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <Container>
         <div className="text-center">Loading...</div>
-      </div>
+      </Container>
     )
   }
 
   if (error || !collection) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
+      <Container>
         <div className="text-center text-red-400">
           {error || 'Collection not found'}
         </div>
-      </div>
+      </Container>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">{collection.name}</h1>
-            {collection.description && (
-              <p className="text-gray-400 mt-2">{collection.description}</p>
-            )}
-          </div>
-          <Link
-            href="/collections"
-            className="text-gray-400 hover:text-white"
-          >
-            Back to Collections
-          </Link>
-        </div>
-
-        <div className="space-y-4">
-          {collection.queries.length === 0 ? (
-            <div className="text-center text-gray-400 py-8">
-              No queries in this collection yet
-            </div>
-          ) : (
-            collection.queries.map((query) => (
-              <Link
-                key={query.id}
-                href={`/query/${query.id}`}
-                className="block p-4 bg-gray-800 rounded hover:bg-gray-700 transition"
-              >
-                <h2 className="text-xl font-semibold">{query.title}</h2>
-                {query.description && (
-                  <p className="text-gray-400 mt-2">{query.description}</p>
-                )}
-                <p className="text-gray-400 text-sm mt-2">
-                  Created {new Date(query.created_at).toLocaleDateString()}
-                </p>
-              </Link>
-            ))
+    <Container>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">{collection.name}</h1>
+          {collection.description && (
+            <p className="text-gray-400 mt-2">{collection.description}</p>
           )}
         </div>
+        <Link
+          href="/collections"
+          className="text-gray-400 hover:text-white"
+        >
+          Back to Collections
+        </Link>
       </div>
-    </div>
+
+      <div className="space-y-4">
+        {collection.queries.length === 0 ? (
+          <div className="text-center text-gray-400 py-8">
+            No queries in this collection yet
+          </div>
+        ) : (
+          collection.queries.map((query) => (
+            <Link
+              key={query.id}
+              href={`/query/${query.id}`}
+              className="block p-4 bg-gray-800 rounded hover:bg-gray-700 transition"
+            >
+              <h2 className="text-xl font-semibold">{query.title}</h2>
+              {query.description && (
+                <p className="text-gray-400 mt-2">{query.description}</p>
+              )}
+              <p className="text-gray-400 text-sm mt-2">
+                Created {new Date(query.created_at).toLocaleDateString()}
+              </p>
+            </Link>
+          ))
+        )}
+      </div>
+    </Container>
   )
 } 

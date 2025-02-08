@@ -18,3 +18,17 @@ export interface Favorite {
   query_id: number
   created_at: string
 }
+
+export interface Query {
+  id: number
+  title: string
+  content: string
+  description?: string
+  tags?: string[]
+  created_at: string
+  updated_at: string
+  user_id: string
+  user?: {
+    email: string
+  }
+}

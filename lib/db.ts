@@ -97,4 +97,47 @@ export async function getUserFavorites() {
 
   if (error) throw error
   return data
+}
+
+export async function createQuery(data: {
+  title: string
+  content: string
+  description?: string
+  tags?: string[]
+}) {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Not authenticated')
+
+  const { data: query, error } = await supabase
+    .from('queries')
+    .insert([{
+      ...data,
+      user_id: user.id
+    }])
+    .select('*, user:user_id(email)')
+    .single()
+
+  if (error) throw error
+  return query
+}
+
+export async function getQuery(id: number) {
+  const { data, error } = await supabase
+    .from('queries')
+    .select('*, user:user_id(email)')
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return data
+}
+
+export async function getQueries() {
+  const { data, error } = await supabase
+    .from('queries')
+    .select('*, user:user_id(email)')
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data
 } 

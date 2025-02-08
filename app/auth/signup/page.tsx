@@ -1,76 +1,105 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/lib/auth-context'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
+import { getEmailError } from '@/lib/auth'
 import Link from 'next/link'
 
 export default function SignUp() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const { signUp } = useAuth()
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    
+    // Validate email domain
+    const emailError = getEmailError(email)
+    if (emailError) {
+      setError(emailError)
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+
     try {
-      await signUp(email, password)
-      router.push('/') // Redirect to home page after successful sign up
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+
+      if (error) throw error
+
+      // Show success message
+      setError('Check your email for the confirmation link')
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="max-w-md w-full space-y-8 p-8 bg-gray-800 rounded-lg shadow-xl">
-        <h2 className="text-center text-3xl font-bold text-white">Create Account</h2>
-        {error && (
-          <div className="bg-red-900/50 border border-red-500 text-red-200 px-4 py-3 rounded">
-            {error}
-          </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="max-w-sm w-full bg-gray-800 rounded-lg p-8">
+        <h1 className="text-2xl font-bold text-white mb-6">Sign Up</h1>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-200">
-              Email
+            <label className="block text-sm font-medium text-gray-200 mb-1">
+              Email (@cribl.io only)
             </label>
             <input
-              id="email"
               type="email"
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white px-3 py-2 focus:border-blue-500 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
+          
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-200">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               Password
             </label>
             <input
-              id="password"
               type="password"
-              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white px-3 py-2 focus:border-blue-500 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+              minLength={6}
             />
           </div>
+
+          {error && (
+            <div className={`p-3 rounded ${error.includes('Check your email') ? 'bg-green-900/50 text-green-200' : 'bg-red-900/50 text-red-200'}`}>
+              {error}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-gray-800"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50"
           >
-            Sign Up
+            {loading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
-        <div className="text-center text-gray-400">
+
+        <p className="mt-4 text-center text-gray-400">
           Already have an account?{' '}
-          <Link href="/auth/signin" className="text-blue-500 hover:text-blue-400">
+          <Link href="/auth/signin" className="text-blue-400 hover:underline">
             Sign in
           </Link>
-        </div>
+        </p>
       </div>
     </div>
   )

@@ -38,11 +38,20 @@ export default async function Home({
               <Link
                 key={query.id}
                 href={`/query/${query.id}`}
-                className="block p-4 bg-gray-800 rounded hover:bg-gray-700"
+                className="block p-6 bg-gray-800 rounded-lg hover:bg-gray-700 transition"
               >
                 <h2 className="text-xl font-semibold">{query.title}</h2>
-                {query.description && <p className="text-gray-400 mt-2">{query.description}</p>}
-                <p className="text-gray-400 mt-2">{new Date(query.created_at).toLocaleString()}</p>
+                {query.description && (
+                  <p className="text-gray-400 mt-2">{query.description}</p>
+                )}
+                <div className="flex justify-between items-center mt-4">
+                  <p className="text-gray-400 text-sm">
+                    Created by {query.user?.email}
+                  </p>
+                  <p className="text-gray-400 text-sm">
+                    {new Date(query.created_at).toLocaleDateString()}
+                  </p>
+                </div>
                 {query.tags && query.tags.length > 0 && (
                   <div className="mt-2">
                     {query.tags.map((tag, index) => (
