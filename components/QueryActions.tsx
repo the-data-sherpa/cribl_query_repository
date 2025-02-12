@@ -4,9 +4,14 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getUserCollections, addQueryToCollection } from '@/lib/db'
 
+interface Collection {
+  id: string; // or number, depending on your data structure
+  name: string;
+}
+
 export default function QueryActions({ queryId }: { queryId: number }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [collections, setCollections] = useState<any[]>([])
+  const [collections, setCollections] = useState<Collection[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showCollections, setShowCollections] = useState(false)

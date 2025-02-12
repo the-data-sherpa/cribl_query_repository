@@ -104,10 +104,7 @@ export async function addQueryToCollection(queryId: number, collectionId: string
       })
       .select()
 
-    if (error) {
-      console.error('Insert error:', error)
-      throw error
-    }
+    if (error) throw error
     return data[0]
   } catch (error) {
     console.error('Failed to add query to collection:', error)

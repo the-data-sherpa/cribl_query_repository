@@ -43,9 +43,9 @@ export async function createCollection(name: string, description?: string) {
  * Adds a query to a collection
  * @throws {Error} If database operation fails
  */
-export async function addQueryToCollection(collectionId: string, queryId: number) {
-  if (!collectionId) throw new Error('Collection ID is required')
+export async function addQueryToCollection(queryId: number, collectionId: string) {
   if (!queryId) throw new Error('Query ID is required')
+  if (!collectionId) throw new Error('Collection ID is required')
 
   try {
     const { error } = await supabase
@@ -53,7 +53,6 @@ export async function addQueryToCollection(collectionId: string, queryId: number
       .insert([{ collection_id: collectionId, query_id: queryId }])
 
     if (error) {
-      // Handle unique constraint violation
       if (error.code === '23505') {
         throw new Error('Query is already in this collection')
       }
