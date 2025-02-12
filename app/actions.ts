@@ -88,3 +88,85 @@ export async function getAllTags() {
   return [...new Set(allTags)]
 }
 
+export async function addQueryToCollection(queryId: number, collectionId: string) {
+  try {
+    const { data: { session }, error: authError } = await supabase.auth.getSession()
+    if (authError || !session?.user) {
+      throw new Error('You must be logged in to add queries to collections')
+    }
+
+    const { data, error } = await supabase
+      .from("collection_queries")
+      .insert({
+        query_id: queryId,
+        collection_id: collectionId,
+        user_id: session.user.id
+      })
+      .select()
+
+    if (error) {
+      console.error('Insert error:', error)
+      throw error
+    }
+    return data[0]
+  } catch (error) {
+    console.error('Failed to add query to collection:', error)
+    throw error
+  }
+}
+
+export async function getUserCollections() {
+  try {
+    const { data: { session }, error: authError } = await supabase.auth.getSession()
+    
+    console.log('Auth check:', {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userId: session?.user?.id,
+      authError
+    })
+
+    if (authError || !session?.user) {
+      console.log('No session or auth error:', authError)
+      return []
+    }
+
+    console.log('Fetching collections for user:', session.user.id)
+    
+    // First, let's check if the user has any collections at all
+    const { data: allCollections, error: countError } = await supabase
+      .from("collections")
+      .select('*')
+    
+    console.log('All collections in DB:', allCollections)
+
+    const { data, error } = await supabase
+      .from("collections")
+      .select(`
+        id,
+        name,
+        description,
+        created_at,
+        user_id
+      `)
+      .eq("user_id", session.user.id)
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      console.error('Supabase error:', error)
+      throw error
+    }
+
+    console.log('Found collections for user:', {
+      userId: session.user.id,
+      collections: data,
+      collectionCount: data?.length
+    })
+
+    return data || []
+  } catch (error) {
+    console.error('Failed to fetch user collections:', error)
+    throw error
+  }
+}
+
